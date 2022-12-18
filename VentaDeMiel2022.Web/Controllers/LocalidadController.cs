@@ -124,7 +124,7 @@ namespace VentaDeMiel2022.Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Producto existente!!!");
+                    ModelState.AddModelError(string.Empty, "Localidad existente!!!");
                     localidadVm.ProvinciasDto = servicioProvincia.GetLista();
                     return View(localidadVm);
                 }
@@ -149,7 +149,7 @@ namespace VentaDeMiel2022.Web.Controllers
             Localidad localidad = servicio.GetLocalidadPorId(id.Value);
             if (localidad == null)
             {
-                return HttpNotFound("Código de marca inexistente!!!");
+                return HttpNotFound("Provincia inexistente");
             }
 
             LocalidadEditVm localidadVm = mapper.Map<LocalidadEditVm>(localidad);
