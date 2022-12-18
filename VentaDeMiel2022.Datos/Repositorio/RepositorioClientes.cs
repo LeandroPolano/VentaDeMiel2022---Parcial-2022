@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VentaDeMiel2022.Datos.Repositorio.Facade;
-using VentaDeMiel2022.Entidades.Dtos.Cliente;
 using VentaDeMiel2022.Entidades.Entidades;
 using VentaDeMiel2022.Entidades.Enum;
 
@@ -142,36 +141,6 @@ namespace VentaDeMiel2022.Datos.Repositorio
             }
         }
 
-        public List<ClienteListDto> GetLista2()
-        {
-            try
-            {
-                return context.Clientes
-                    .Include(c => c.TipoDeDocumento)
-                    .Include(c => c.Pais)
-                    .Include(c => c.Provincia)
-                    .Include(c => c.Localidad)
-                    .Select(c => new ClienteListDto()
-                    {
-                        ClienteId = c.ClienteId,
-                        Nombre = c.Nombre,
-                        Apellido = c.Apellido,
-                        TipoDeDocumento = c.TipoDeDocumento.Descripcion,
-                        NroDocumento = c.NroDocumento,
-                        Direccion = c.Direccion,
-                        Localidad = c.Localidad.NombreLocalidad,
-                        Provincia = c.Provincia.NombreProvincia,
-                        Pais = c.Pais.NombrePais,
-                        TelefonoFijo = c.TelefonoFijo,
-                        TelefonoMovil = c.TelefonoMovil,
-                        CorreoElectronico = c.CorreoElectronico
-
-                    }).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+       
     }
 }

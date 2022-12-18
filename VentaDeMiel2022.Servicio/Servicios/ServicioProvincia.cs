@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VentaDeMiel2022.Datos;
 using VentaDeMiel2022.Datos.Repositorio;
 using VentaDeMiel2022.Datos.Repositorio.Facade;
+using VentaDeMiel2022.Entidades.Dtos;
 using VentaDeMiel2022.Entidades.Entidades;
 using VentaDeMiel2022.Entidades.Enum;
 using VentaDeMiel2022.Servicio.Servicios.Facades;
@@ -15,19 +16,23 @@ namespace VentaDeMiel2022.Servicio.Servicios
     public class ServicioProvincia:IServicioProvincia
     {
         private readonly IRepositorioProvincia repositorio;
-        private readonly IRepositorioPais repositorioPais;
+        private readonly IUnitOfWork unitOfWork;
         private readonly VentaDeMiel2022DbContext context;
-        public ServicioProvincia()
+        public ServicioProvincia(RepositorioProvincia repositorio, VentaDeMiel2022DbContext context, UnitOfWork unitOfWork)
         {
-            repositorio = new RepositorioProvincia(context);
-            repositorioPais = new RepositorioPaises(context);
-
+            this.unitOfWork = unitOfWork;
+            this.repositorio = repositorio;
+            this.context = context;
         }
+
+        
+
         public void Guardar(Provincia provincia)
         {
             try
             {
                 repositorio.Guardar(provincia);
+                unitOfWork.Save();
             }
             catch (Exception e)
             {
@@ -35,25 +40,12 @@ namespace VentaDeMiel2022.Servicio.Servicios
             }
         }
 
-       
-
-        public List<Provincia> GetLista(Pais p, Orden orden)
+        public void Borrar(Provincia provincia)
         {
             try
             {
-                return repositorio.GetLista(p,orden);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-        public void Borrar(int provinciaId)
-        {
-            try
-            {
-                repositorio.Borrar(provinciaId);
+                repositorio.Borrar(provincia);
+                
             }
             catch (Exception e)
             {
@@ -63,7 +55,15 @@ namespace VentaDeMiel2022.Servicio.Servicios
 
         public Provincia GetProvinciaPorId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return repositorio.GetProvinciaPorId(id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public bool Existe(Provincia provincia)
@@ -71,6 +71,18 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 return repositorio.Existe(provincia);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<ProvinciaListDto> GetLista()
+        {
+            try
+            {
+                return repositorio.GetLista();
             }
             catch (Exception e)
             {
@@ -90,18 +102,22 @@ namespace VentaDeMiel2022.Servicio.Servicios
             }
         }
 
-        public Pais p;
-        public Orden orden;
-        public List<Provincia> GetLista()
+        public void BorrarProvincia(Provincia provincia)
         {
             try
             {
-                return repositorio.GetLista(p,orden);
+                repositorio.BorrarProvincia(provincia);
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
         }
+
+        public Pais p;
+        public Orden orden;
+
+
+
     }
 }

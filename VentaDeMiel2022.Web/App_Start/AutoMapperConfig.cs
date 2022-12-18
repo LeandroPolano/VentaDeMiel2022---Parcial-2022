@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using VentaDeMiel2022.Web.Mapping;
 
-namespace VentaDeMiel2022.Web
+namespace VentaDeMiel2022.Web.App_Start
 {
     public class AutoMapperConfig
     {
@@ -15,6 +19,5 @@ namespace VentaDeMiel2022.Web
             });
             Mapper = config.CreateMapper();
         }
-
     }
 }

@@ -9,12 +9,11 @@ namespace VentaDeMiel2022.Web.Models.Pais
 {
     public class PaisEditVm
     {
-        public int CategoriaId { get; set; }
+        public int PaisId { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [StringLength(50, ErrorMessage = "El campo {0} debe contener entre {2} y {1} caracteres", MinimumLength = 2)]
-        [DisplayName("Descripción")]
+        [DisplayName("Nombre de pais")]
         public string NombrePais { get; set; }
-       
     }
 }

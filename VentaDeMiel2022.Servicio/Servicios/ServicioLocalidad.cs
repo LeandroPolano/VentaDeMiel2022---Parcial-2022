@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VentaDeMiel2022.Datos;
 using VentaDeMiel2022.Datos.Repositorio;
 using VentaDeMiel2022.Datos.Repositorio.Facade;
+using VentaDeMiel2022.Entidades.Dtos;
 using VentaDeMiel2022.Entidades.Entidades;
 using VentaDeMiel2022.Entidades.Enum;
 using VentaDeMiel2022.Servicio.Servicios.Facades;
@@ -17,17 +18,21 @@ namespace VentaDeMiel2022.Servicio.Servicios
         private readonly IRepositorioLocalidad repositorio;
         private readonly IRepositorioProvincia repositorioProvincia;
         private readonly VentaDeMiel2022DbContext context;
-        public ServicioLocalidad()
+        private readonly IUnitOfWork unitOfWork;
+        public ServicioLocalidad(UnitOfWork unitOfWork, VentaDeMiel2022DbContext context , RepositorioLocalidades repositorio , RepositorioProvincia RepositorioProvincia)
         {
-            context = new VentaDeMiel2022DbContext();
-            repositorio = new RepositorioLocalidades(context);
-            repositorioProvincia = new RepositorioProvincia(context);
+            this.context = context;
+            this.repositorio = repositorio;
+            this.repositorioProvincia = RepositorioProvincia;
+            this.unitOfWork = unitOfWork;
         }
-        public void Guardar(Localidad localidad)
+        void IServicioLocalidad.Guardar(Localidad localidad)
         {
+  
             try
             {
                 repositorio.Guardar(localidad);
+                unitOfWork.Save();
             }
             catch (Exception e)
             {
@@ -52,6 +57,7 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 repositorio.Borrar(localidadID);
+                unitOfWork.Save();
             }
             catch (Exception e)
             {
@@ -61,7 +67,15 @@ namespace VentaDeMiel2022.Servicio.Servicios
 
         public Localidad GetLocalidadPorId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return repositorio.GetLocalidadPorId(id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public bool Existe(Localidad localidad)
@@ -92,11 +106,25 @@ namespace VentaDeMiel2022.Servicio.Servicios
 
         public Provincia pr;
         public Orden orden;
-        public List<Localidad> GetLista()
+      
+
+        List<LocalidadListDto> IServicioLocalidad.GetLista2()
         {
             try
             {
-                return repositorio.GetLista(pr, orden);
+                return repositorio.GetLista2();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public void BorrarLocalidad(Localidad localidad)
+        {
+            try
+            {
+                repositorio.BorrarLocalidad(localidad);
             }
             catch (Exception e)
             {

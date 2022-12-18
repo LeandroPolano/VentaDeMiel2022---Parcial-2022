@@ -14,7 +14,7 @@ namespace VentaDeMiel2022.Servicio.Servicios.Facades
         List<Pais> GetLista();
 
         void Borrar(int paisId);
-
+        void BorrarPais(Pais pais);
         Pais GetPaisPorId(int id);
 
         bool Existe(Pais pais);

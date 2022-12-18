@@ -82,7 +82,6 @@
     <Compile Include="UnitOfWork.cs" />
     <Compile Include="VentaDeMiel2022DbContext.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

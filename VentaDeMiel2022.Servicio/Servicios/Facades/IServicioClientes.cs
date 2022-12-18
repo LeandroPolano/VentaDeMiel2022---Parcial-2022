@@ -14,7 +14,7 @@ namespace VentaDeMiel2022.Servicio.Servicios.Facades
 
         List<Cliente> GetLista(TipoDeDocumento td, Localidad L, Provincia pr, Pais p/*, Orden orden*/);
 
-        List<Entidades.Dtos.Cliente.ClienteListDto> GetLista2();
+        //List<Entidades.Dtos.Cliente.ClienteListDto> GetLista2();
 
         void Borrar(int clienteId);
 

@@ -12,9 +12,11 @@ namespace VentaDeMiel2022.Web.Helpers
         {
             get
             {
-                return (new SelectList(new List<int> { 5, 10, 15, 20, 25, 50, 100 },
-                    selectedValue: 10));
+                return (new SelectList(new List<int> { 5, 10, 15, 20, 25, 50, 100
+                },
+                selectedValue: 10));
             }
         }
     }
+
 }

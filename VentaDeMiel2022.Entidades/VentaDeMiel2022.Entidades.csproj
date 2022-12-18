@@ -44,11 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dtos\ClienteListDto.cs" />
-    <Compile Include="Dtos\Cliente\ProductoDetalleDto.cs" />
-    <Compile Include="Dtos\ProductoListDto.cs" />
-    <Compile Include="Dtos\Producto\ProductoDetalleDto.cs" />
-    <Compile Include="Dtos\Usuario\UsuarioListDto.cs" />
+    <Compile Include="Dtos\LocalidadListDto.cs" />
+    <Compile Include="Dtos\ProvinciaListDto.cs" />
     <Compile Include="Entidades\Cliente.cs" />
     <Compile Include="Entidades\DetalleVenta.cs" />
     <Compile Include="Entidades\Localidad.cs" />
@@ -62,7 +59,6 @@
     <Compile Include="Enum\Orden.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>

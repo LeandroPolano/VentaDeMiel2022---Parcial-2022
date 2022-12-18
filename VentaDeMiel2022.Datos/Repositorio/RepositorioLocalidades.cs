@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VentaDeMiel2022.Datos.Repositorio.Facade;
+using VentaDeMiel2022.Entidades.Dtos;
 using VentaDeMiel2022.Entidades.Entidades;
 using VentaDeMiel2022.Entidades.Enum;
 using EntityState = System.Data.Entity.EntityState;
@@ -17,10 +18,12 @@ namespace VentaDeMiel2022.Datos.Repositorio
 
         public RepositorioLocalidades(VentaDeMiel2022DbContext ventaDeMiel2022DbContext)
         {
-            context = new VentaDeMiel2022DbContext();
+            this.context = ventaDeMiel2022DbContext;
         }
+        
         public void Guardar(Localidad localidad)
         {
+       
             try
             {
                 if (localidad.NombreProvincia != null)
@@ -30,6 +33,8 @@ namespace VentaDeMiel2022.Datos.Repositorio
                 if (localidad.LocalidadId == 0)
                 {
                     context.Localidades.Add(localidad);
+
+                    
                 }
                 else
                 {
@@ -46,8 +51,8 @@ namespace VentaDeMiel2022.Datos.Repositorio
                     context.Entry(LocalidadesInDb).State = EntityState.Modified;
 
                 }
-
-                context.SaveChanges();
+               
+                
             }
             catch (Exception e)
             {
@@ -110,7 +115,17 @@ namespace VentaDeMiel2022.Datos.Repositorio
 
         public Localidad GetLocalidadPorId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return context.Localidades
+                    .Include(p => p.NombreProvincia)
+                    .SingleOrDefault(p => p.LocalidadId == id);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
         public bool Existe(Localidad localidad)
@@ -142,6 +157,41 @@ namespace VentaDeMiel2022.Datos.Repositorio
             catch (Exception e)
             {
                 throw new Exception(e.Message);
+            }
+        }
+
+        public List<LocalidadListDto> GetLista2()
+        {
+            try
+            {
+                return context.Localidades
+                    .Include(p => p.NombreProvincia)              
+                    .Select(p => new LocalidadListDto()
+                    {
+                        LocalidadId = p.LocalidadId,
+                        NombreLocalidad = p.NombreLocalidad,
+                        Provincia = p.NombreProvincia.NombreProvincia,
+                        
+
+                    }).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void BorrarLocalidad(Localidad localidad)
+        {
+            try
+            {
+                context.Entry(localidad).State = EntityState.Deleted;
+                context.SaveChanges();
+
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

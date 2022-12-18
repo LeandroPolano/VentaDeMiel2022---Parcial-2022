@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using VentaDeMiel2022.Datos.Repositorio.Facade;
+using VentaDeMiel2022.Entidades.Dtos;
 using VentaDeMiel2022.Entidades.Entidades;
 using VentaDeMiel2022.Entidades.Enum;
 
@@ -14,104 +15,75 @@ namespace VentaDeMiel2022.Datos.Repositorio
 
         public RepositorioProvincia(VentaDeMiel2022DbContext ventaDeMiel2022DbContext)
         {
-            context = new VentaDeMiel2022DbContext();
+           this. context = ventaDeMiel2022DbContext;
         }
 
         public void Guardar(Provincia provincia)
         {
             try
             {
-                if (provincia.NombrePais!=null)
+                if (provincia.Pais != null)
                 {
-                    context.Paises.Attach(provincia.NombrePais);
+                    provincia.Pais = null;
+
                 }
-                if (provincia.ProvinciaId==0)
+                if (provincia.ProvinciaId == 0)
                 {
                     context.Provincias.Add(provincia);
                 }
+
                 else
                 {
-                    var provinciaInDb = context.Provincias.SingleOrDefault(p => p.ProvinciaId == provincia.ProvinciaId);
-                    if (provinciaInDb==null)
-                    {
-                        throw new Exception("Código de provincia inexistente...");
-                    }
+                    var provinciasInDb = context.Provincias.SingleOrDefault(p => p.ProvinciaId == provincia.ProvinciaId );
+                    provinciasInDb.ProvinciaId = provincia.ProvinciaId;
+                    provinciasInDb.NombreProvincia = provincia.NombreProvincia;
+                    provinciasInDb.PaisId = provincia.PaisId;
+                    
 
-                    provinciaInDb.NombreProvincia = provincia.NombreProvincia;
-                    provinciaInDb.PaisId = provincia.PaisId;
-                   
 
-                    context.Entry(provinciaInDb).State = EntityState.Modified;
-
+                    context.Entry(provinciasInDb).State = EntityState.Modified;
                 }
-
-                context.SaveChanges();
+                
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new Exception(e.Message);
+                throw ex;
             }
-        
+            
+
         }
 
       
 
-        public List<Provincia> GetLista(Pais p, Orden orden = Orden.BD)
+       
+
+        public void Borrar(Provincia provincia)
         {
             try
             {
-                IQueryable<Provincia> query = context.Provincias.Include(p => p.NombrePais);
-                if (p != null)
-                {
-                    query = query.Where(p => p.PaisId == p.PaisId);
-                }
-
-                switch (orden)
-                {
-                    case Orden.BD:
-                        break;
-                    case Orden.AZ:
-                        query = query.OrderBy(p => p.NombreProvincia);
-                        break;
-                    case Orden.ZA:
-                        query = query.OrderByDescending(p => p.NombreProvincia);
-                        break;
-                  
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(orden), orden, null);
-                }
-                return query
-                    .AsNoTracking()
-                    .ToList();
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-        public void Borrar(int provinciaId)
-        {
-            try
-            {
-                var provinciaInDb = context.Provincias.SingleOrDefault(p => p.ProvinciaId == provinciaId);
-                if (provinciaInDb == null)
-                {
-                    throw new Exception("Código de provincia inexistente");
-                }
-
-                context.Entry(provinciaInDb).State = EntityState.Deleted;
+                context.Entry(provincia).State = EntityState.Deleted;
                 context.SaveChanges();
+
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw e;
             }
         }
 
         public Provincia GetProvinciaPorId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return context.Provincias
+                    .Include(p => p.Pais)
+                    .SingleOrDefault(p => p.ProvinciaId == id);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
         public bool Existe(Provincia provincia)
@@ -132,6 +104,27 @@ namespace VentaDeMiel2022.Datos.Repositorio
             }
         }
 
+        public List<ProvinciaListDto> GetLista()
+        {
+            try
+            {
+                return context.Provincias
+                    .Include(p => p.Pais)
+                    .Select(p => new ProvinciaListDto()
+                    {
+                        ProvinciaId = p.ProvinciaId,
+                        NombreProvincia = p.NombreProvincia,
+                        Pais = p.Pais.NombrePais
+
+
+                    }).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool EstaRelacionado(Provincia provincia)
         {
             try
@@ -142,6 +135,20 @@ namespace VentaDeMiel2022.Datos.Repositorio
             catch (Exception e)
             {
                 throw new Exception(e.Message);
+            }
+        }
+
+        public void BorrarProvincia(Provincia provincia)
+        {
+            try
+            {
+                context.Entry(provincia).State = EntityState.Deleted;
+                context.SaveChanges();
+
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

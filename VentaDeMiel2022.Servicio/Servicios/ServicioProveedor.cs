@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VentaDeMiel2022.Datos;
 using VentaDeMiel2022.Datos.Repositorio;
 using VentaDeMiel2022.Datos.Repositorio.Facade;
 using VentaDeMiel2022.Entidades.Entidades;
@@ -13,9 +14,14 @@ namespace VentaDeMiel2022.Servicio.Servicios
     public class ServicioProveedor : IServicioProveedor
     {
         private readonly IRepositorioProveedor repositorio;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly VentaDeMiel2022DbContext context;
+
+
 
         public ServicioProveedor()
         {
+            
             repositorio = new RepositorioProveedor();
         }
         public void Borrar(int proveedorId)
@@ -23,6 +29,7 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 repositorio.Borrar(proveedorId);
+                unitOfWork.Save();
             }
             catch (Exception e)
             {
@@ -80,6 +87,7 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 repositorio.Guardar(proveedor);
+                unitOfWork.Save();
             }
             catch (Exception e)
             {

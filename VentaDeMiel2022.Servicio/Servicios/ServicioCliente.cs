@@ -90,16 +90,16 @@ namespace VentaDeMiel2022.Servicio.Servicios
             }
         }
 
-        public List<Entidades.Dtos.Cliente.ClienteListDto> GetLista2()
-        {
-            try
-            {
-                return repositorio.GetLista2();
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
+        //public List<Entidades.Dtos.Cliente.ClienteListDto> GetLista2()
+        //{
+        //    try
+        //    {
+        //        return repositorio.GetLista2();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new Exception(e.Message);
+        //    }
+        //}
     }
 }

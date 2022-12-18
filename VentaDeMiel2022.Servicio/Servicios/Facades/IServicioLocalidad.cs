@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VentaDeMiel2022.Entidades.Dtos;
 using VentaDeMiel2022.Entidades.Entidades;
 using VentaDeMiel2022.Entidades.Enum;
 
@@ -13,6 +14,8 @@ namespace VentaDeMiel2022.Servicio.Servicios.Facades
         void Guardar(Localidad localidad);
 
         List<Localidad> GetLista(Provincia pr, Orden orden);
+        List<LocalidadListDto> GetLista2();
+
 
         void Borrar(int localidadID);
 
@@ -20,7 +23,8 @@ namespace VentaDeMiel2022.Servicio.Servicios.Facades
 
         bool Existe(Localidad localidad);
         bool EstaRelacionado(Localidad localidad);
-        List<Localidad> GetLista();
+        void BorrarLocalidad(Localidad localidad);
+        //List<Localidad> GetLista();
         //List<Localidad> GetLista();
     }
 }

@@ -14,18 +14,22 @@ namespace VentaDeMiel2022.Servicio.Servicios
     public class ServicioPaises : IServicioPais
     {
         private readonly IRepositorioPais repositorio;
+        private readonly IUnitOfWork unitOfWork;
+
         private readonly VentaDeMiel2022DbContext context;
 
-        public ServicioPaises()
+        public ServicioPaises(UnitOfWork unitOfWork, VentaDeMiel2022DbContext context, RepositorioPaises paises)
         {
-            repositorio = new RepositorioPaises(context);
+            this.unitOfWork = unitOfWork;
+            this.context = context;
+            this.repositorio = paises;
         }
         void IServicioPais.Guardar(Pais pais)
         {
             try
             {
                 repositorio.Guardar(pais);
-
+                unitOfWork.Save();
             }
             catch (Exception e)
             {
@@ -50,6 +54,7 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 repositorio.Borrar(paisId);
+                unitOfWork.Save();
             }
             catch (Exception e)
             {
@@ -57,10 +62,18 @@ namespace VentaDeMiel2022.Servicio.Servicios
             }
             
         }
+       
 
         public Pais GetPaisPorId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return context.Paises.SingleOrDefault(c => c.PaisId == id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool Existe(Pais pais)
@@ -80,6 +93,18 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 return repositorio.EstaRelacionado(pais);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public void BorrarPais(Pais pais)
+        {
+            try
+            {
+                repositorio.BorrarPais(pais);
             }
             catch (Exception e)
             {
