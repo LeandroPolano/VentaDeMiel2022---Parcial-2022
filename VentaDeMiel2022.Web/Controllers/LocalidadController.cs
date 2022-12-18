@@ -110,6 +110,7 @@ namespace VentaDeMiel2022.Web.Controllers
             if (!ModelState.IsValid)
             {
                 localidadVm.ProvinciasDto = servicioProvincia.GetLista();
+
                 return View(localidadVm);
             }
             Localidad localidad = mapper.Map<Localidad>(localidadVm);
