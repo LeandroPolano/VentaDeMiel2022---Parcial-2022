@@ -21,7 +21,7 @@ namespace VentaDeMiel2022.Datos.Repositorio
         {
             context = new VentaDeMiel2022DbContext();
         }
-        public void Guardar(Entidades.Entidades.Cliente cliente)
+        public void Guardar(Cliente cliente)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace VentaDeMiel2022.Datos.Repositorio
             }
         }
 
-        public List<Entidades.Entidades.Cliente> GetLista(TipoDeDocumento td = null, Localidad L= null, Provincia pr= null, Pais p=null)
+        public List<Cliente> GetLista()
         {
             try
             {

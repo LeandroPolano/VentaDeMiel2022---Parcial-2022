@@ -89,7 +89,7 @@ namespace VentaDeMiel2022.Servicio.Servicios
                 throw new Exception(e.Message);
             }
         }
-
+     
         public bool EstaRelacionado(Provincia provincia)
         {
             try
@@ -107,6 +107,19 @@ namespace VentaDeMiel2022.Servicio.Servicios
             try
             {
                 repositorio.BorrarProvincia(provincia);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        List<Provincia> IServicioProvincia.GetListaAJAX()
+        {
+
+            try
+            {
+                return repositorio.GetListaAJAX();
             }
             catch (Exception e)
             {

@@ -9,7 +9,7 @@ namespace VentaDeMiel2022.Datos.Repositorio.Facade
     {
         void Guardar(Entidades.Entidades.Cliente cliente);
 
-        List<Entidades.Entidades.Cliente> GetLista(TipoDeDocumento td, Localidad L, Provincia pr, Pais p/*, Orden orden*/);
+        List<Entidades.Entidades.Cliente> GetLista();
         //List<Entidades.Dtos.Cliente.ClienteListDto> GetLista2();
         void Borrar(int clienteId);
 

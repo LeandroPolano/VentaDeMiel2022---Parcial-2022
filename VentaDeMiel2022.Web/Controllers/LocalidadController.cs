@@ -29,6 +29,7 @@ namespace VentaDeMiel2022.Web.Controllers
             this.servicio = servicio;
             mapper = AutoMapperConfig.Mapper;
         }
+      
         // GET: Localidad
         public ActionResult Index()
         {
@@ -46,7 +47,11 @@ namespace VentaDeMiel2022.Web.Controllers
             };
             return View(localidadVm);
         }
-
+        public JsonResult ListarLocalidad()
+        {
+            var lista = servicio.GetLista2();
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult Create(LocalidadEditVm localidadVm)
         {

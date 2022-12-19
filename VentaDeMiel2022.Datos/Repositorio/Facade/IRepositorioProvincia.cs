@@ -13,7 +13,7 @@ namespace VentaDeMiel2022.Datos.Repositorio.Facade
     {
         void Guardar( Provincia provincia);
         List<ProvinciaListDto> GetLista();
-
+        List<Provincia> GetListaAJAX();
         void Borrar(Provincia provincia);
 
         Provincia GetProvinciaPorId(int id);

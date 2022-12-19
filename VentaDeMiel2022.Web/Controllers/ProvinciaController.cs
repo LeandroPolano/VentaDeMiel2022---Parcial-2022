@@ -21,6 +21,11 @@ namespace VentaDeMiel2022.Web.Controllers
 
         private readonly IMapper mapper;
 
+        public JsonResult ListarProvincias()
+        {
+            var lista = servicio.GetLista();
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
         public ProvinciaController(ServicioProvincia servicio, ServicioPaises servicioPais)
         {
             this.servicioPais = servicioPais;

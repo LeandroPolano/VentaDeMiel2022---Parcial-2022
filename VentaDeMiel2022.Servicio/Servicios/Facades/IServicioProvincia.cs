@@ -16,6 +16,7 @@ namespace VentaDeMiel2022.Servicio.Servicios.Facades
         List<ProvinciaListDto> GetLista();
         void Borrar(Provincia provincia);
 
+        List<Provincia> GetListaAJAX();
         Provincia GetProvinciaPorId(int id);
 
         bool Existe(Provincia provincia);

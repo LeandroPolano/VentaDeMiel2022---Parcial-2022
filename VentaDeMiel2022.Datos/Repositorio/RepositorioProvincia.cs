@@ -125,6 +125,21 @@ namespace VentaDeMiel2022.Datos.Repositorio
             }
         }
 
+        public List<Provincia> GetListaAJAX()
+        {
+
+            try
+            {
+                return context.Provincias
+                    .AsNoTracking()
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool EstaRelacionado(Provincia provincia)
         {
             try
