@@ -13,7 +13,7 @@ using VentaDeMiel2022.Entidades.Enum;
 
 namespace VentaDeMiel2022.Datos.Repositorio
 {
-    public class RepositorioClientes: IRepositorioCliente
+    public class RepositorioClientes : IRepositorioCliente
     {
         private readonly VentaDeMiel2022DbContext context;
 
@@ -26,7 +26,7 @@ namespace VentaDeMiel2022.Datos.Repositorio
             try
             {
 
-                
+
                 if (cliente.ClienteId == 0)
                 {
                     context.Clientes.Add(cliente);
@@ -43,14 +43,13 @@ namespace VentaDeMiel2022.Datos.Repositorio
                     ClientesInDb.Apellido = cliente.Apellido;
                     ClientesInDb.TipoDeDocumentoId = cliente.TipoDeDocumentoId;
                     ClientesInDb.LocalidadId = cliente.LocalidadId;
-                    ClientesInDb.ProvinciaId = cliente.ProvinciaId; 
+                    ClientesInDb.ProvinciaId = cliente.ProvinciaId;
                     ClientesInDb.PaisId = cliente.PaisId;
 
                     context.Entry(ClientesInDb).State = EntityState.Modified;
 
                 }
 
-                context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -116,7 +115,7 @@ namespace VentaDeMiel2022.Datos.Repositorio
                 if (cliente.ClienteId == 0)
                 {
                     return context.Clientes
-                        .Any(p => p.NroDocumento == cliente.NroDocumento);
+                        .Any(p => p.ClienteId == cliente.ClienteId);
                 }
                 return context.Clientes.Any(p => p.Nombre == cliente.Nombre &&
                                                     p.ClienteId != cliente.ClienteId &&
@@ -130,17 +129,10 @@ namespace VentaDeMiel2022.Datos.Repositorio
 
         public bool EstaRelacionado(Cliente cliente)
         {
-            try
-            {
-                return context.Clientes
-                    .Any(dt => dt.ClienteId == cliente.ClienteId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            return false;
+
         }
 
-       
+
     }
 }

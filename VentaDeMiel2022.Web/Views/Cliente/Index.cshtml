@@ -50,6 +50,17 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <input type="hidden" id="txtClienteId" value="0" />
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div id="mensajeError" class="alert alert-danger" role="alert">
+                                A simple danger alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="col-md-6">
                         <label for="txtNombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="txtNombre" placeholder="Ingrese Nombre">
@@ -62,6 +73,11 @@
                     <div class="col-md-6">
                         <label for="txtNumeroDeDocumento" class="form-label">Numero De Documento</label>
                         <input type="text" class="form-control" id="txtNumeroDeDocumento" placeholder="Ingrese Numero De Documento">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cboTipoDocumento" class="form-label">Tipo de Documento</label>
+                        <select id="cboTipoDocumento" class="form-select" aria-label="Default select example">
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <label for="txtDireccion" class="form-label">Direccion</label>
@@ -80,11 +96,7 @@
                         <input type="text" class="form-control" id="txtCorreoElectronico" placeholder="Ingrese Correo Electronico">
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="cboTipoDocumento" class="form-label">Tipo de Documento</label>
-                        <select id="cboTipoDocumento" class="form-select" aria-label="Default select example" >
-                        </select>
-                    </div>
+
                     <div class="col-md-6">
                         <label for="cboLocalidad" class="form-label">Localidad</label>
                         <select id="cboLocalidad" class="form-select" aria-label="Default select example">
@@ -106,7 +118,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
             </div>
         </div>
     </div>
@@ -116,81 +128,140 @@
 
     <script>
         var tablaClientes;
-
+        var filaSeleccionada;
         $(document).ready(function () {
-
-            cargarCboProvincias();
+            CargarTabla();
             cargarCboTipoDocumento();
+            cargarCboPais();
+            cargarCboProvincias();
             cargarCboLocalidad();
+
+
+            $("#tabla tbody").on("click",
+                '.btn-editar',
+                function () {
+
+                    filaSeleccionada = $(this).closest("tr");
+                    var datos = tablaClientes.row(filaSeleccionada).data();
+                    abrirModal(datos);
+                    //console.log(datos);
+
+                });
 
         })
 
 
-        function abrirModal() {
+
+
+        function abrirModal(JsonModal) {
+
             $("#FormModal").modal("show")
-            $("#cboTipoDocumento").val(TipoDeDocumentoId);
+            $("#mensajeError").hide();
+            
+            $("#txtClienteId").val(0)
 
+            $("#txtNombre").val("")
+            $("#txtApellido").val("")
+            $("#txtNumeroDeDocumento").val("")
+            $("#txtDireccion").val("")
+            $("#txtTelefonoFijo").val("")
+            $("#txtTelefonoMovil").val("")
+            $("#txtCorreoElectronico").val("")
+
+
+            $("#cboTipoDocumento").val("#cboTipoDocumento option:first").val();
+            $("#cboPais").val("#cboPais option:first").val();
+            $("#cboProvincia").val("#cboProvincia option:first").val();
+            $("#cboLocalidad").val("#cboLocalidad option:first").val();
+
+            if (JsonModal != null) {
+
+                cargarCboTipoDocumento();
+
+                cargarCboLocalidad();
+                cargarCboPais();
+                cargarCboProvincias();
+
+                $("#txtProvinciaId").val(JsonModal.ClienteId);
+
+                $("#txtNombre").val(JsonModal.Nombre)
+                $("#txtApellido").val(JsonModal.Apellido)
+                $("#txtNumeroDeDocumento").val(JsonModal.NroDocumento)
+                $("#txtDireccion").val(JsonModal.Direccion)
+                $("#txtTelefonoFijo").val(JsonModal.TelefonoFijo)
+                $("#txtTelefonoMovil").val(JsonModal.TelefonoMovil)
+                $("#txtCorreoElectronico").val(JsonModal.CorreoElectronico)
+
+                $("#cboPais").val("#cboPais option:first");
+                $("#cboProvincia").val("#cboProvincia option:first");
+                $("#cboLocalidad").val("#cboLocalidad option:first");
+
+                $("#cboTipoDocumento").val("#cboTipoDocumento option:first").val();
+
+            }
+            $("#FormModal").modal("show");
         }
+        function CargarTabla() {
+            tablaClientes = $("#tabla").DataTable({
 
-        tablaClientes = $("#tabla").dataTable({
-
-            responsive: "true",
-            ordering: "false",
-            "ajax": {
-                url: "@Url.Action("ListarClientes","Cliente")",
-                type: "GET",
-                dataType: "json"
-            },
-            "columns": [
-                { "data": "Nombre" },
-                { "data": "Apellido" },
-                {
-                    "data": "TipoDeDocumento",
-                    render: function (data) {
-                        return data.Descripcion
-                    }
-
+                responsive: "true",
+                ordering: "false",
+                "ajax": {
+                    url: "@Url.Action("ListarClientes","Cliente")",
+                    type: "GET",
+                    dataType: "json"
                 },
-                { "data": "NroDocumento" },
-                { "data": "Direccion" },
-                {
-                    "data": "Localidad",
-                    render: function (data) {
-                        return data.NombreLocalidad
-                    }
+                "columns": [
+                    { "data": "Nombre" },
+                    { "data": "Apellido" },
+                    {
+                        "data": "TipoDeDocumento",
+                        render: function (data) {
+                            return data.Descripcion
+                        }
 
-                },                {
-                    "data": "Provincia",
-                    render: function (data) {
-                        return data.NombreProvincia
-                    }
+                    },
+                    { "data": "NroDocumento" },
+                    { "data": "Direccion" },
+                    {
+                        "data": "Localidad",
+                        render: function (data) {
+                            return data.NombreLocalidad
+                        }
 
-                },
-                {
-                    "data": "Pais",
-                    render: function (data) {
-                        return data.NombrePais
-                    }
+                    },
+                    {
+                        "data": "Provincia",
+                        render: function (data) {
+                            return data.NombreProvincia
+                        }
 
-                },
-                { "data": "TelefonoFijo" },
-                { "data": "TelefonoMovil" },
-                { "data": "CorreoElectronico" },
+                    },
+                    {
+                        "data": "Pais",
+                        render: function (data) {
+                            return data.NombrePais
+                        }
 
-
-
-                {
-                    "defaultContent": '<button type="button" class="btn btn-warning mx-3">Editar</button>' +
-                        '<button type="button" class="btn btn-danger">Borrar</button>',
-                    "orderable": false,
-                    "searchable": false,
-                   }
+                    },
+                    { "data": "TelefonoFijo" },
+                    { "data": "TelefonoMovil" },
+                    { "data": "CorreoElectronico" },
 
 
-                ]
 
-        });
+                    {
+                        "defaultContent": '<button type="button" class="btn btn-warning mx-3 btn-editar"  >Editar</button>' +
+                            '<button type="button" class="btn btn-danger btn-Borrar" >Borrar</button>',
+                        "orderable": false,
+                        "searchable": false,
+                       }
 
+
+                    ]
+
+            });
+        }
         function cargarCboProvincias() {
              jQuery.ajax({
                 url: "@Url.Action("ListarProvincias", "Provincia")",
@@ -244,7 +315,7 @@
 
 
             jQuery.ajax({
-                url: "@Url.Action("Index", "Pais")",
+                url: "@Url.Action("ListarPais", "Pais")",
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
@@ -290,6 +361,184 @@
             });
 
         }
+
+        function Guardar() {
+            var cliente = {
+                ClienteId: $("#txtClienteId").val(),
+
+                Nombre: $("#txtNombre").val(),
+                Apellido: $("#txtApellido").val(),
+                NroDocumento: $("#txtNumeroDeDocumento").val(),
+                Direccion: $("#txtDireccion").val(),
+                TelefonoFijo: $("#txtTelefonoFijo").val(),
+                TelefonoMovil: $("#txtTelefonoMovil").val(),
+                CorreoElectronico: $("#txtCorreoElectronico").val(),
+
+
+                PaisId: $("#cboPais").val(),
+                Pais: {
+                    PaisId: $("#cboPais option:selected").val(),
+                    NombrePais: $("#cboPais option:selected").text()
+                },
+
+                ProvinciaId: $("#cboProvincia").val(),
+                Provincia: {
+                    ProvinciaId: $("#cboProvincia option:selected").val(),
+                    NombreProvincia: $("#cboProvincia option:selected").text()
+                },
+
+                LocalidadId: $("#cboLocalidad").val(),
+                Localidad: {
+                    LocalidadId: $("#cboLocalidad option:selected").val(),
+                    NombreLocalidad: $("#cboLocalidad option:selected").text()
+                },
+
+                TipoDeDocumentoId: $("#cboTipoDocumento").val(),
+                TipoDeDocumento: {
+                    TipoDeDocumentoId: $("#cboTipoDocumento option:selected").val(),
+                    Descripcion: $("#cboTipoDocumento option:selected").text()
+                }
+            };
+
+                         jQuery.ajax({
+                            url: "@Url.Action("GuardarCliente","Cliente")",
+                             type: "POST",
+                             data: JSON.stringify({clienteRecibida:cliente}),
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                             success: function (data)
+                             {
+                                 if (cliente.ClienteId == 0) {
+                                    debugger;
+                                     if (data.resultado != 0) {
+                                         cliente.ClienteId == data.resultado;
+                                         tablaClientes.row.add(cliente).draw(false);
+                                        $("#FormModal").modal("hide");
+                                    } else {
+                                        $("#mensajeError").text(data.mensaje);
+                                        $("#mensajeError").show();
+                                    }
+
+                                 } else
+                                 {
+                                     if (data.resultado != 0)
+                                     {
+                                         tablaClientes.row(filaSeleccionada).data(cliente).draw(false);
+                                        filaSeleccionada = null;
+                                        $("#FormModal").modal('hide');
+
+                                     } else
+                                     {
+                                        $("#mensajeError").text(data.mensaje);
+                                        $("#mensajeError").show();
+                                     }
+
+
+                                }
+
+                             }
+                            
+                        });
+
+
+
+        }
+
+
+        @*function Guardar() {
+            var cliente = {
+
+
+                Nombre: $("#txtNombre").val(),
+                Apellido: $("#txtApellido").val(),
+                NroDocumento: $("#txtNumeroDeDocumento").val(),
+                Direccion: $("#txtDireccion").val(),
+                TelefonoFijo: $("#txtTelefonoFijo").val(),
+                TelefonoMovil: $("#txtTelefonoMovil").val(),
+                CorreoElectronico: $("#txtCorreoElectronico").val(),
+
+
+                PaisId: $("#cboPais").val(),
+                Pais: {
+                    PaisId: $("#cboPais option:selected").val(),
+                    NombrePais: $("#cboPais option:selected").text()
+                },
+
+                ProvinciaId: $("#cboProvincia").val(),
+                Provincia: {
+                    ProvinciaId: $("#cboProvincia option:selected").val(),
+                    NombreProvincia: $("#cboProvincia option:selected").text()
+                },
+
+                LocalidadId: $("#cboLocalidad").val(),
+                Localidad: {
+                    LocalidadId: $("#cboLocalidad option:selected").val(),
+                    NombreLocalidad: $("#cboLocalidad option:selected").text()
+                },
+
+                TipoDeDocumentoId: $("#cboTipoDocumento").val(),
+                TipoDeDocumento: {
+                    TipoDeDocumentoId: $("#cboTipoDocumento option:selected").val(),
+                    Descripcion: $("#cboTipoDocumento option:selected").text()
+                }
+            }
+
+
+
+            console.log(cliente);
+            debugger;
+            var request = new FormData();
+            request.append("objeto", JSON.stringify(cliente));
+
+            jQuery.ajax({
+                url: "@Url.Action("GuardarCliente", "Cliente")",
+                type: "POST",
+                data: request,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+
+                    if (cliente.ClienteId == 0) {
+                        debugger;
+                        if (data.resultado != 0) {
+                            cliente.ClienteId = data.resultado;
+                            tablaClientes.row.add(cliente).draw(false);
+                            $("#FormModal").modal("hide");
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+
+                    } else {
+                        if (data.resultado != 0) {
+                            tablaClientes.row(filaSeleccionada).data(cliente).draw(false);
+                            filaSeleccionada = null;
+                            $("#FormModal").modal('hide');
+
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+
+
+                    }
+
+                },
+                error: function (error) {
+
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactory: 2,
+                        text: "Guardando...",
+                        size: 14
+                    });
+
+                }
+            });
+
+        }*@
 
 
 

@@ -26,6 +26,12 @@ namespace VentaDeMiel2022.Web.Controllers
             mapper = AutoMapperConfig.Mapper;
         }
         // GET: Pais
+
+        public JsonResult ListarPais()
+        {
+            var lista = servicio.GetLista();
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult Index()
         {
             var lista = servicio.GetLista();

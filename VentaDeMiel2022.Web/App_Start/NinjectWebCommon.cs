@@ -77,7 +77,7 @@ namespace VentaDeMiel2022.Web.App_Start
 
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
 
-            kernel.Bind<VentaDeMiel2022DbContext>().ToSelf().InSingletonScope();
+            kernel.Bind<VentaDeMiel2022DbContext>().ToSelf().InThreadScope();
         }
     }
 }

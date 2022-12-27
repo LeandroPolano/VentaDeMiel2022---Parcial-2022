@@ -147,18 +147,18 @@ namespace VentaDeMiel2022.Datos.Repositorio
             }
         }
 
-        public bool EstaRelacionado(Localidad localidad)
-        {
-            try
-            {
-                return context.Clientes
-                    .Any(dt => dt.LocalidadId == localidad.LocalidadId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
+        //public bool EstaRelacionado(Localidad localidad)
+        //{
+        //    try
+        //    {
+        //        return context.Clientes
+        //            .Any(dt => dt.LocalidadId == localidad.LocalidadId);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new Exception(e.Message);
+        //    }
+        //}
 
         public List<LocalidadListDto> GetLista2()
         {
@@ -193,6 +193,11 @@ namespace VentaDeMiel2022.Datos.Repositorio
             {
                 throw e;
             }
+        }
+
+        public bool EstaRelacionado(Localidad localidad)
+        {
+            throw new NotImplementedException();
         }
     }
 }
